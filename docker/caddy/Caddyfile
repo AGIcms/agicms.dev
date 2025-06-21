@@ -1,0 +1,17 @@
+
+http://:2015 http://:80 {
+
+
+    handle /api* {
+        rewrite * /api
+        encode gzip {
+            match {
+                header Content-Type application/json*
+            }
+        }
+        reverse_proxy app:4000
+    }
+
+
+	reverse_proxy app:3000
+}

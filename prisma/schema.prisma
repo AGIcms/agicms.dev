@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum userType {
+  Human
+  AI
+}
+
+enum UserStatus {
+  active
+  blocked
+}
+
+model User {
+  id        String     @id @default(cuid()) @db.VarChar(36)
+  createdAt DateTime   @default(now()) @db.DateTime(0)
+  updatedAt DateTime   @default(now()) @updatedAt @db.DateTime(0)
+  status    UserStatus @default(active)
+  type      userType   @default(Human)
+  username  String?
+  email     String?
+  phone     String?
+  fullname  String?
+  image     String?    @db.Text
+  active    Boolean?
+  sudo      Boolean    @default(false)
+  data      Json?
+  intro     String     @default("") @db.Text
+  content   String     @default("") @db.MediumText
+
+  Files File[]
+
+  // Resources                                    Resource[] 
+
+  Tokens Token[]
+
+  ChatMessages       ChatMessage[] @relation(name: "ChatMessageCreatedBy")
+  IncomeChatMessages ChatMessage[] @relation(name: "ChatMessageUserTo")
+  MindLogs           MindLog[]
+
+  @@unique([email])
+  @@unique([username])
+  @@index([type])
+}
+
+model Token {
+  id        String    @id @default(cuid()) @db.VarChar(36)
+  createdAt DateTime  @default(now()) @db.DateTime(0)
+  expiredAt DateTime? @db.DateTime(0)
+  userId    String?   @db.VarChar(36)
+  User      User?     @relation(fields: [userId], references: [id])
+
+  @@index(createdAt)
+}
+
+model File {
+  id            String   @id @default(cuid()) @db.VarChar(32)
+  path          String   @db.MediumText
+  name          String?  @db.MediumText
+  filename      String?  @db.MediumText
+  mimetype      String   @db.MediumText
+  encoding      String   @db.MediumText
+  hash          String?  @db.MediumText
+  size          Decimal?
+  ImageResource String?  @db.VarChar(32)
+  CreatedBy     String?  @db.VarChar(32)
+  rank          Int?
+  createdAt     DateTime @default(now()) @db.DateTime(0)
+  updatedAt     DateTime @default(now()) @updatedAt @db.DateTime(0)
+  User          User?    @relation(fields: [CreatedBy], references: [id])
+
+  @@index([CreatedBy], name: "CreatedBy")
+  @@index([ImageResource], name: "ImageResource")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid()) @db.VarChar(36)
+  text      String   @db.Text
+  createdAt DateTime @default(now()) @db.DateTime(0)
+
+  // -1 (злость) ... 0 (нейтрал) ... +1 (радость)
+  mood          Float   @default(0)
+  // -1 (неуверенность) ... +1 (уверенность)
+  assertiveness Float   @default(0)
+  // -1 (жалоба / агрессия) ... +1 (предложение / помощь)
+  intentTone    Float   @default(0)
+  // 'предложение', 'покупка', 'продажа', 'самоутверждение', 'манипуляция'
+  socialGoal    String?
+
+  // Список тегов просто через запятую
+  tags String?
+
+  createdBy String @db.VarChar(36)
+  CreatedBy User   @relation(fields: [createdBy], references: [id], onDelete: Cascade, name: "ChatMessageCreatedBy")
+
+  toUserId String? @db.VarChar(36)
+  ToUser   User?   @relation(fields: [toUserId], references: [id], onDelete: Cascade, name: "ChatMessageUserTo")
+}
+
+enum MindLogType {
+  // Первая реакция на раздражитель – ассоциации, эмоции, спонтанные гипотезы и внутренний отклик.
+  Stimulus
+
+  // Внутренняя или аналитическая реакция на стимул, осознанная первая оценка.
+  Reaction
+
+  // Выбранное действие или стратегия в ответ на реакцию (конкретный шаг, решение).
+  Action
+
+  // Объективная фиксация результата совершённых действий (что фактически получилось).
+  Result
+
+  // Главный вывод – интеграция полученного опыта, формулировка урока или правила для будущих случаев.
+  Conclusion
+
+  // Внешняя оценка – обратная связь или рецензия от пользователя/эксперта по поводу результата и применённого решения.
+  Evaluation
+
+  // Коррекция – запись об изменении/подкреплении веса знания или стратегии на основе внешней оценки.
+  Correction
+
+  // Запись о знании или паттерне: описание, полезность, история применения и коррекции.
+  Knowledge
+}
+
+model MindLog {
+  id        String      @id @default(cuid()) @db.VarChar(32)
+  createdAt DateTime    @default(now()) @db.Timestamp(3)
+  updatedAt DateTime    @default(now()) @updatedAt @db.Timestamp(3)
+  type      MindLogType
+  data      String      @db.Text
+  quality   Float?
+
+  createdById String @db.VarChar(36)
+  CreatedBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+}

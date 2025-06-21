@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  proxy:
+    ports:
+      - 2015:2015
+  app:
+    volumes:
+      - ../package.json:/app/package.json
+      - ../pages:/app/pages
+      - ../prisma:/app/prisma
+      - ../src:/app/src
+      - ../server:/app/server
+    command: bash -c "yarn dev"
+    ports:
+      - 3030:3000
+      - 4040:4000
+
+
+  mysql:
+    ports:
+      - '3306:3306'
+
+  pma:
+    ports:
+      - 8090:80

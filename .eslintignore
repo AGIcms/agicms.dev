@@ -1,0 +1,18 @@
+**/node_modules/*
+**/out/*
+**/.next/*
+**/dist/*
+**/coverage/*
+**/.storybook/*
+**/storybook-static/*
+/.vscode
+/docker
+/packages
+/public
+/shared
+/prisma/migrations
+generated
+/tsconfig.tsbuildinfo
+
+# cypress
+/cypress

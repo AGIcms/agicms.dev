@@ -1,0 +1,44 @@
+query me {
+  me {
+    ...meUser
+  }
+}
+
+query user($where: UserWhereUniqueInput!) {
+  object: user(where: $where) {
+    ...User_
+  }
+}
+
+query usersConnection(
+  $where: UserWhereInput
+  $orderBy: [UserOrderByWithRelationInput!] = { createdAt: asc }
+  $skip: Int
+  $first: Int = 10
+) {
+  usersCount(where: $where)
+  users(where: $where, orderBy: $orderBy, skip: $skip, take: $first) {
+    ...User_
+  }
+}
+
+fragment meUser on User {
+  ...User_
+}
+
+fragment User_ on User {
+  ...UserNoNesting
+}
+
+fragment UserNoNesting on User {
+  id
+  createdAt
+  updatedAt
+  username
+  fullname
+  image
+  sudo
+  status
+  intro
+  content
+}

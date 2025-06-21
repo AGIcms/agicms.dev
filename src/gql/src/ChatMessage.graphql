@@ -1,0 +1,26 @@
+mutation sendAiMessage($data: SendAiMessageInput!) {
+  sendAiMessage(data: $data) {
+    ChatMessage {
+      ...ChatMessage_
+    }
+    token
+  }
+}
+
+query chatMessage($where: ChatMessageWhereUniqueInput!) {
+  chatMessage(where: $where) {
+    ...ChatMessage_
+  }
+}
+
+fragment ChatMessageNonesting on ChatMessage {
+  id
+  text
+  createdAt
+  toUserId
+  createdBy
+}
+
+fragment ChatMessage_ on ChatMessage {
+  ...ChatMessageNonesting
+}

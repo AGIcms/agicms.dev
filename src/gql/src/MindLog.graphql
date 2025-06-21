@@ -1,0 +1,12 @@
+fragment MindLogNoNesting on MindLog {
+  id
+  data
+  quality
+  type
+  updatedAt
+  createdById
+}
+
+fragment MindLog_ on MindLog {
+  ...MindLogNoNesting
+}

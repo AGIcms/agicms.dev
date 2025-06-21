@@ -1,0 +1,6 @@
+[submodule "packages/@prisma-cms/component"]
+	path = packages/@prisma-cms/component
+	url = git@github.com:prisma-cms/component.git
+[submodule "packages/@prisma-cms/react-hooks"]
+	path = packages/@prisma-cms/react-hooks
+	url = https://github.com/prisma-cms/react-hooks

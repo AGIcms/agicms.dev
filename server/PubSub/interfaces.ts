@@ -1,0 +1,3 @@
+export enum PUBSUB_TYPE {
+  ACTIVITY_ADDED = 'ACTIVITY_ADDED',
+}

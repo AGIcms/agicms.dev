@@ -1,0 +1,1 @@
+declare module 'translit-russian'

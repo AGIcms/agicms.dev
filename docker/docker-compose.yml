@@ -1,0 +1,54 @@
+version: '3.7'
+
+services:
+  app:
+    tty: true
+    build:
+      context: ../
+      network: ${NETWORK_NAME:-agicms-default}
+      args:
+        - ENV_MODE=development
+        - APP_SECRET=${APP_SECRET}
+        - DATABASE_URL=${DATABASE_URL}
+        - OPENAI_API_KEY=${OPENAI_API_KEY}
+        - OPENAI_API_BASE_URL=${OPENAI_API_BASE_URL}
+        - OPENAI_DEFAULT_MODEL=${OPENAI_DEFAULT_MODEL}
+    volumes:
+      - ../public:/app/public
+      - ../shared:/app/shared
+      - ../uploads:/app/uploads
+      - ../opt:/opt
+    environment:
+      - ENV_MODE=development
+    env_file:
+      - .env
+
+  proxy:
+    environment:
+      - ACME_AGREE=true
+    build:
+      context: ./caddy
+    volumes:
+      - ./caddy/${CADDY_FILE:-Caddyfile}:/etc/caddy/Caddyfile
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD:-your_mysql_password}
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: ${MYSQL_HOST:-mysql}
+      PMA_PORT: ${MYSQL_PORT:-3306}
+      UPLOAD_LIMIT: ${PMA_UPLOAD_LIMIT:-100M}
+
+  mail:
+    image: mailhog/mailhog
+
+networks:
+  default:
+    name: ${NETWORK_NAME:-agicms-default}

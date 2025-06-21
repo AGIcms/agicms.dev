@@ -1,0 +1,9 @@
+/docker
+/node_modules
+/.next
+/dist
+/shared
+/uploads
+/.git
+/.env
+generated
