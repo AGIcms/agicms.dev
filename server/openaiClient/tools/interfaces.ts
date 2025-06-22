@@ -14,6 +14,8 @@ export enum toolName {
   updateSystemPrompt = 'updateSystemPrompt',
   getGrahpQlSchema = 'getGrahpQlSchema',
   execGrahpqlQuery = 'execGrahpqlQuery',
+  execCommand = 'execCommand',
+  getSystemInfo = 'getSystemInfo',
 }
 
 export type ToolHandler<T> = (

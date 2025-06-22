@@ -5,6 +5,8 @@ import { summarizeContextTool } from './summarizeContext'
 import { updateSystemPromptTool } from './updateSystemPrompt'
 import { getGrahpQlSchemaTool } from './getGrahpqlSchema'
 import { execGrahpqlQueryTool } from './execGrahpqlQuery'
+import { execCommandTool } from './execCommand'
+import { getSystemInfo } from './getSystemInfo'
 
 export const tools = {
   [createMindLogTool.name]: createMindLogTool,
@@ -14,4 +16,6 @@ export const tools = {
   [updateSystemPromptTool.name]: updateSystemPromptTool,
   [getGrahpQlSchemaTool.name]: getGrahpQlSchemaTool,
   [execGrahpqlQueryTool.name]: execGrahpqlQueryTool,
+  [execCommandTool.name]: execCommandTool,
+  [getSystemInfo.name]: getSystemInfo,
 } as const

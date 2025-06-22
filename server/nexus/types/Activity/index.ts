@@ -28,6 +28,8 @@ export const Activity = interfaceType({
         return 'ActivityUrl'
       case 'UserCreated':
         return 'ActivityUser'
+      case 'StdOut':
+        return 'ActivityStdOut'
     }
   },
 })
@@ -83,6 +85,14 @@ export const ActivityToolCall = objectType({
     t.field('args', {
       type: 'Json',
     })
+  },
+})
+
+export const ActivityStdOut = objectType({
+  name: 'ActivityStdOut',
+  definition(t) {
+    t.implements('Activity')
+    t.nonNull.string('StdOut')
   },
 })
 

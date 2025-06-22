@@ -31,6 +31,10 @@ type createActivityProps = {
     | ({
         type: typeof ActivityType.ToolCall
       } & Pick<NexusGenRootTypes['ActivityToolCall'], 'name' | 'args'>)
+    | {
+        type: typeof ActivityType.StdOut
+        StdOut: string
+      }
 }
 
 export function createActivity({
@@ -81,6 +85,14 @@ export function createActivity({
       break
 
     case ActivityType.ToolCall:
+      activity = {
+        ...commonFields,
+        ...payload,
+      }
+
+      break
+
+    case ActivityType.StdOut:
       activity = {
         ...commonFields,
         ...payload,

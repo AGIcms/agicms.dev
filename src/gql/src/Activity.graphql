@@ -33,4 +33,7 @@ fragment Activity_ on Activity {
     name
     args
   }
+  ... on ActivityStdOut {
+    StdOut
+  }
 }

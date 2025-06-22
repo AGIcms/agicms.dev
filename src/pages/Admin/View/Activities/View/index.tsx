@@ -92,6 +92,13 @@ export const ActivitiesView: React.FC = () => {
 
               break
 
+            case 'ActivityStdOut':
+              title = 'StdOut'
+
+              dataContent = <pre>{n.StdOut}</pre>
+
+              break
+
             default:
               title = 'Unknown'
               console.error('unknown type', n.__typename)

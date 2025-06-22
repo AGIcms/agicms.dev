@@ -4,4 +4,5 @@ export enum ActivityType {
   SendMessaged = 'SendMessaged',
   MindLog = 'MindLog',
   ToolCall = 'ToolCall',
+  StdOut = 'StdOut',
 }

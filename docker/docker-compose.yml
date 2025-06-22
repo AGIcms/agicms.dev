@@ -17,7 +17,7 @@ services:
       - ../public:/app/public
       - ../shared:/app/shared
       - ../uploads:/app/uploads
-      - ../opt:/opt
+      - ../server/openaiClient/data:/app/server/openaiClient/data
     environment:
       - ENV_MODE=development
     env_file:
