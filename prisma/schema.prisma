@@ -96,6 +96,9 @@ model ChatMessage {
   // Список тегов просто через запятую
   tags String?
 
+  // Статистика использования токенов
+  usage Json?
+
   createdBy String @db.VarChar(36)
   CreatedBy User   @relation(fields: [createdBy], references: [id], onDelete: Cascade, name: "ChatMessageCreatedBy")
 

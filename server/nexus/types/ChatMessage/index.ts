@@ -23,7 +23,9 @@ export const ChatMessage = objectType({
     t.nonNull.float('intentTone')
     t.string('socialGoal')
 
-    t.id('companyId')
+    t.field('usage', {
+      type: 'Json',
+    })
 
     t.field('CreatedBy', {
       type: 'User',

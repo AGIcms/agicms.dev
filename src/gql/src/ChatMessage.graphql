@@ -19,6 +19,7 @@ fragment ChatMessageNonesting on ChatMessage {
   createdAt
   toUserId
   createdBy
+  usage
 }
 
 fragment ChatMessage_ on ChatMessage {

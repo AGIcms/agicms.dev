@@ -32,6 +32,7 @@ export async function sendMessage({
     fromUser,
     toUser,
     text,
+    usage: undefined,
   })
 
   return message

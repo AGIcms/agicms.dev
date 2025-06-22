@@ -29,6 +29,9 @@ export const User = objectType({
 
     t.string('fullname')
     t.string('address')
+    t.field('data', {
+      type: 'Json',
+    })
 
     t.nonNull.string('intro')
     t.nonNull.string('content')

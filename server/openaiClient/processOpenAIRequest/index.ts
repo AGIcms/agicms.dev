@@ -63,6 +63,8 @@ export async function sendOpenAiRequest({
 
     const responseMessage = completion.choices[0].message
 
+    const usage = completion.usage
+
     messages.push(responseMessage)
 
     if (responseMessage.tool_calls && responseMessage.tool_calls.length > 0) {
@@ -92,6 +94,7 @@ export async function sendOpenAiRequest({
          */
         fromUser: toUser,
         toUser: fromUser,
+        usage,
       })
     }
 

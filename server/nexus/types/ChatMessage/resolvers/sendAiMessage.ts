@@ -47,6 +47,7 @@ export const sendAiMessageResolver: FieldResolver<
     toUser,
     text,
     id: id ?? undefined,
+    usage: undefined,
   })
 
   const messages: ChatCompletionMessageParam[] = []

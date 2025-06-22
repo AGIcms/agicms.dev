@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { SendAiMessageInput, useSendAiMessageMutation } from 'src/gql/generated'
 import { AppActions } from 'src/AppContext/reducer/interfaces'
 import { useAppContext } from 'src/AppContext'
@@ -17,16 +16,7 @@ export function useChat() {
 
   const client = useApolloClient()
 
-  useEffect(() => {
-    console.log('useEffect client', client)
-  }, [client])
-
   const sendChatMessage = useCallback(() => {
-    // if (!currentUser) {
-    //   console.error('Не был получен пользователь')
-    //   return
-    // }
-
     textSetter((text) => {
       // Проверяем, что текст не пустой
       if (text) {
