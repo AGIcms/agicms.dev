@@ -5,5 +5,5 @@
 /shared
 /uploads
 /.git
-/.env
+.env
 generated

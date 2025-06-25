@@ -50,7 +50,6 @@ RUN npm ci --force
 
 COPY . .
 
-
 RUN npm i -g yarn --force
 
 RUN yarn prisma:deploy
