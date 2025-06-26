@@ -1,7 +1,6 @@
 import { MindLogType } from '@prisma/client'
 import { BaseAiTool, toolName } from '../interfaces'
-import { createActivity } from '../../../nexus/types/Activity/helpers/createActivity'
-import { ActivityType } from '../../../nexus/types/Activity/interfaces'
+import { createMindLog } from './helpers/createMindLog'
 
 export interface CreateMindLogArgs {
   type: MindLogType
@@ -46,26 +45,16 @@ export const createMindLogTool: CreateMindLogTool = {
   handler: async (args, ctx, user) => {
     const { data, type, quality } = args
 
-    return ctx.prisma.mindLog
-      .create({
-        data: {
-          data,
-          type,
-          quality,
-          createdById: user.id,
-        },
-      })
-      .then((mindLog) => {
-        createActivity({
-          ctx,
-          userId: user.id,
-          payload: {
-            type: ActivityType.MindLog,
-            MindLog: mindLog,
-          },
-        })
-
-        return `Сделана запись с id "${mindLog.id}"`
-      })
+    return createMindLog({
+      data: {
+        data,
+        type,
+        quality,
+      },
+      ctx,
+      user,
+    }).then((mindLog) => {
+      return `Сделана запись с id "${mindLog.id}"`
+    })
   },
 }

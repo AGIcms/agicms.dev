@@ -2,7 +2,7 @@ import { shield } from 'graphql-shield'
 import { Rule } from 'graphql-shield/typings/rules'
 import { NexusGenFieldTypes } from '../../nexus/generated/nexus'
 // import { isAuthenticated } from './rules/isAuthenticated'
-// import { isSudo } from './rules/isSudo'
+import { isSudo } from './rules/isSudo'
 
 type RuleTree<K extends NexusGenFieldTypes> = {
   // TODO Fix types
@@ -17,35 +17,11 @@ type RuleTreeRule<K extends Record<string, any>> = {
 }
 
 const ruleTree: RuleTree<NexusGenFieldTypes> = {
-  // Query: {
-  //   chatMessage: isSudo,
-  //   chatMessages: isSudo,
-  //   mindLogs: isSudo,
-  // },
-  // Mutation: {
-  //   // updateUserProcessor: isAuthenticated,
-  //   createCommentProcessor: isAuthenticated,
-  //   updateCommentProcessor: isAuthenticated,
-  //   createBlogProcessor: isAuthenticated,
-  //   updateBlogProcessor: isAuthenticated,
-  //   createTopicProcessor: isAuthenticated,
-  //   updateTopicProcessor: isAuthenticated,
-  //   // deleteResource: isSudo,
-  //   // createTechnology: isSudo,
-  //   // updateTechnology: isSudo,
-  //   updateCodeChallenge: isSudo,
-  //   // blockUser: isSudo,
-  //   // unblockUser: isSudo,
-  //   // updateOneUser: isSudo,
-  //   // updateCurrentUser: isAuthenticated,
-  //   // updateCurrentUser: isSudo,
-  //   // createOneDonate: isSudo,
-  //   // createAiAgentUser: isSudo,
-  //   // createChatMessageProcessor: isSudo,
-  //   singleUpload: isAuthenticated,
-  //   sendAiMessage: isAuthenticated,
-  //   sendMessage: isSudo,
-  // },
+  Query: {
+    chatMessage: isSudo,
+    chatMessages: isSudo,
+    mindLogs: isSudo,
+  },
 }
 
 export const permissions = shield(ruleTree, {

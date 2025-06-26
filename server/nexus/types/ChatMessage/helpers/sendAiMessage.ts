@@ -5,6 +5,7 @@ import { sendOpenAiRequest } from '../../../../openaiClient/processOpenAIRequest
 import { ChatCompletionMessageParam } from 'openai/resources/chat'
 import { ChatMessage, User } from '@prisma/client'
 import { AiAgentUserData } from '../../../../openaiClient/interfaces'
+import { createMindLog } from '../../../../openaiClient/tools/createMindLog/helpers/createMindLog'
 
 /**
  * Временное решение для сохранения текущей истории сообщений между пользователями и ИИ
@@ -32,6 +33,8 @@ export const sendAiMessage = async ({
 
   const messages = (withHistory && messagesHistory.get(historyKey)) || []
 
+  const isFirstConversation = messages.length === 0
+
   if (!messagesHistory.has(historyKey) && withHistory) {
     messagesHistory.set(historyKey, messages)
   }
@@ -58,10 +61,70 @@ export const sendAiMessage = async ({
     }
   }
 
+  if (isFirstConversation) {
+    messages.push({
+      role: 'system',
+      content: `## Информация о пользователе:
+      
+${JSON.stringify(fromUser, null, 2)}`,
+    })
+
+    messages.push({
+      role: 'assistant',
+      content: `Мой ID пользователя (Agend user id): ${toUser.id}`,
+    })
+
+    /**
+     * Получаем все текущие знания
+     */
+    await ctx.prisma.mindLog
+      .findMany({
+        orderBy: {
+          createdAt: 'asc',
+        },
+        where: {
+          createdById: toUser.id,
+        },
+      })
+      .then((r) => {
+        if (r.length > 0) {
+          messages.push({
+            role: 'assistant',
+            content: `## Мои текущие знания
+        
+          ${JSON.stringify(r, null, 2)}
+`,
+          })
+        }
+      })
+      .catch(console.error)
+  }
+
   messages.push({
     role: 'system',
-    content: `ID пользователя (userId): ${fromUser.id}`,
+    content: `Текущее системное время: ${new Date().toISOString()}`,
   })
+
+  /**
+   * Создаем майндлог стимула (безусловный раздражитель)
+   */
+
+  await createMindLog({
+    data: {
+      data: 'Поступило новое сообщение пользователя',
+      quality: 1,
+      type: 'Stimulus',
+    },
+    ctx,
+    user: toUser,
+  })
+    .then((r) => {
+      messages.push({
+        role: 'assistant',
+        content: JSON.stringify(r),
+      })
+    })
+    .catch(console.error)
 
   messages.push(...messagesProps)
 
