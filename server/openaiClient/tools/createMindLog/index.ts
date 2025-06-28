@@ -6,6 +6,7 @@ export interface CreateMindLogArgs {
   type: MindLogType
   data: string
   quality: number
+  relatedToUserId?: string
 }
 
 export type CreateMindLogTool = BaseAiTool<
@@ -37,19 +38,25 @@ export const createMindLogTool: CreateMindLogTool = {
             type: 'number',
             description: 'Оценка качества мысли/действия/результата от 0 до 1',
           },
+          relatedToUserId: {
+            type: 'string',
+            description:
+              'ID пользователя, в отношении которого создается майндлог. Если не указан, то знание считается глобальным и касается всех пользователей. Если знание индивидуальное',
+          },
         },
         required: ['type', 'data'],
       },
     },
   },
   handler: async (args, ctx, user) => {
-    const { data, type, quality } = args
+    const { data, type, quality, relatedToUserId } = args
 
     return createMindLog({
       data: {
         data,
         type,
         quality,
+        relatedToUserId,
       },
       ctx,
       user,

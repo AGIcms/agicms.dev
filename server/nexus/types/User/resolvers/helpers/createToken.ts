@@ -1,10 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { User } from '@prisma/client'
 import { PrismaContext } from 'server/nexus/context'
-
-export type AuthTokenData = {
-  tokenId: string
-}
+import { AuthTokenData } from '../../interfaces'
 
 /**
  * Записываем токен доступа в базу

@@ -1,5 +1,5 @@
 import { BaseAiTool, toolName } from '../interfaces'
-import { execute, parse } from 'graphql'
+import { execute, parse, specifiedRules, validate } from 'graphql'
 import { schema } from '../../../nexus'
 import { PrismaContext } from '../../../nexus/context'
 import { createApolloContext } from '../../../nexus/createApolloContext'
@@ -67,19 +67,38 @@ export const execGrahpqlQueryTool: execGrahpqlQuery = {
       contextValue = ctx
     }
 
-    let result = execute({
+    let document
+    try {
+      document = parse(query)
+    } catch (syntaxError) {
+      return `GraphQL syntax error: ${JSON.stringify(syntaxError)}`
+    }
+
+    const validationErrors = validate(schema, document, specifiedRules)
+
+    if (validationErrors.length > 0) {
+      return `GraphQL validation errors: ${JSON.stringify(validationErrors)}`
+    }
+
+    const result = await execute({
       schema: schema,
       document: parse(query),
       variableValues: variables,
       contextValue,
     })
 
-    if (result instanceof Promise) {
-      result = await result.catch((error) => {
-        console.error(error)
-
-        return error
-      })
+    if (
+      result &&
+      typeof result === 'object' &&
+      Array.isArray(result.errors) &&
+      result.errors.length > 0
+    ) {
+      console.error('GraphQL Errors:', result.errors)
+      return JSON.stringify(
+        { errors: result.errors, data: result.data ?? null },
+        null,
+        2,
+      )
     }
 
     return !result

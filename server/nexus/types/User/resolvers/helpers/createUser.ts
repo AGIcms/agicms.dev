@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 import { PrismaContext } from 'server/nexus/context'
-import { createToken } from '../helpers'
+import { createToken } from '../helpers/createToken'
 import { createActivity } from '../../../Activity/helpers/createActivity'
 import { ActivityType } from '../../../Activity/interfaces'
 

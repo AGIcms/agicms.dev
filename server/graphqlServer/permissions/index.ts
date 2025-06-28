@@ -3,6 +3,7 @@ import { Rule } from 'graphql-shield/typings/rules'
 import { NexusGenFieldTypes } from '../../nexus/generated/nexus'
 // import { isAuthenticated } from './rules/isAuthenticated'
 import { isSudo } from './rules/isSudo'
+import { isAi } from './rules/isAi'
 
 type RuleTree<K extends NexusGenFieldTypes> = {
   // TODO Fix types
@@ -18,8 +19,8 @@ type RuleTreeRule<K extends Record<string, any>> = {
 
 const ruleTree: RuleTree<NexusGenFieldTypes> = {
   Query: {
-    chatMessage: isSudo,
-    chatMessages: isSudo,
+    chatMessage: isAi,
+    chatMessages: isAi,
     mindLogs: isSudo,
   },
 }

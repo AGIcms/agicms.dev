@@ -1,11 +1,10 @@
 import { PrismaContext } from 'server/nexus/context'
 
-import { sendOpenAiRequest } from '../../../../openaiClient/processOpenAIRequest'
+import { sendOpenAiRequest } from './processOpenAIRequest'
 
 import { ChatCompletionMessageParam } from 'openai/resources/chat'
 import { ChatMessage, User } from '@prisma/client'
-import { AiAgentUserData } from '../../../../openaiClient/interfaces'
-import { createMindLog } from '../../../../openaiClient/tools/createMindLog/helpers/createMindLog'
+import { AiAgentUserData } from './interfaces'
 
 /**
  * Временное решение для сохранения текущей истории сообщений между пользователями и ИИ
@@ -83,7 +82,25 @@ ${JSON.stringify(fromUser, null, 2)}`,
           createdAt: 'asc',
         },
         where: {
-          createdById: toUser.id,
+          AND: [
+            {
+              createdById: toUser.id,
+              type: 'Knowledge',
+              quality: {
+                gte: 0.5,
+              },
+            },
+            {
+              OR: [
+                {
+                  relatedToUserId: null,
+                },
+                {
+                  relatedToUserId: fromUser.id,
+                },
+              ],
+            },
+          ],
         },
       })
       .then((r) => {
@@ -104,27 +121,6 @@ ${JSON.stringify(fromUser, null, 2)}`,
     role: 'system',
     content: `Текущее системное время: ${new Date().toISOString()}`,
   })
-
-  /**
-   * Создаем майндлог стимула (безусловный раздражитель)
-   */
-
-  await createMindLog({
-    data: {
-      data: 'Поступило новое сообщение пользователя',
-      quality: 1,
-      type: 'Stimulus',
-    },
-    ctx,
-    user: toUser,
-  })
-    .then((r) => {
-      messages.push({
-        role: 'assistant',
-        content: JSON.stringify(r),
-      })
-    })
-    .catch(console.error)
 
   messages.push(...messagesProps)
 

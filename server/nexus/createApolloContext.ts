@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken'
 import { context, PrismaContext } from '../nexus/context'
-import { AuthTokenData } from './types/User/resolvers/helpers'
+import { AuthTokenData } from './types/User/interfaces'
 import { pubsub } from '../PubSub'
 
 // Функция для получения контекста запроса
 export async function createApolloContext({
   req,
-  type,
+  type: _type,
   currentUser = null,
 }: {
   req?: PrismaContext['req']
@@ -15,12 +15,12 @@ export async function createApolloContext({
 }): Promise<PrismaContext> {
   let ContextToken: PrismaContext['Token'] = null
 
-  if (process.env.NODE_ENV === 'development') {
-    if (type === 'ws') {
-      // eslint-disable-next-line no-console
-      console.log('req?.headers.authorization', req?.headers.authorization)
-    }
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   if (type === 'ws') {
+  //     // eslint-disable-next-line no-console
+  //     console.log('req?.headers.authorization', req?.headers.authorization)
+  //   }
+  // }
 
   if (req?.headers.authorization) {
     try {
@@ -58,12 +58,12 @@ export async function createApolloContext({
     }
   }
 
-  if (process.env.NODE_ENV === 'development') {
-    if (type === 'ws') {
-      // eslint-disable-next-line no-console
-      console.log('createApolloContext currentUser', type, currentUser)
-    }
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   if (type === 'ws') {
+  //     // eslint-disable-next-line no-console
+  //     console.log('createApolloContext currentUser', type, currentUser)
+  //   }
+  // }
 
   return {
     ...context,

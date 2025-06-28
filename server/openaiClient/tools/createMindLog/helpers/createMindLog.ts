@@ -9,13 +9,14 @@ type createMindLogProps = {
     type: MindLogType
     data: string
     quality: number
+    relatedToUserId?: string
   }
   ctx: PrismaContext
   user: User
 }
 
 export async function createMindLog({
-  data: { data, type, quality },
+  data: { data, type, quality, relatedToUserId },
   ctx,
   user,
 }: createMindLogProps) {
@@ -26,6 +27,7 @@ export async function createMindLog({
         type,
         quality,
         createdById: user.id,
+        relatedToUserId,
       },
     })
     .then((mindLog) => {

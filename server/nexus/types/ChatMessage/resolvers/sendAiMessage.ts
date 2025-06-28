@@ -1,9 +1,9 @@
 import { FieldResolver } from 'nexus'
 import { ChatCompletionMessageParam } from 'openai/resources/index'
 import { getAiUser } from '../../../../openaiClient/helpers/getAiUser'
-import { sendAiMessage } from '../helpers/sendAiMessage'
+import { sendAiMessage } from '../../../../openaiClient/sendAiMessage'
 import { createMessage } from '../helpers/createMessage'
-import { createToken } from '../../User/resolvers/helpers'
+import { createToken } from '../../User/resolvers/helpers/createToken'
 
 export const sendAiMessageResolver: FieldResolver<
   'Mutation',

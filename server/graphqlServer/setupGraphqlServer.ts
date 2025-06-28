@@ -72,12 +72,12 @@ export async function setupGraphqlServer(): Promise<{ port: number }> {
           type: 'ws',
         })
       },
-      onConnect: () => {
-        if (process.env.NODE_ENV === 'development') {
-          // eslint-disable-next-line no-console
-          console.log('🔌 WS connected')
-        }
-      },
+      // onConnect: () => {
+      //   if (process.env.NODE_ENV === 'development') {
+      //     // eslint-disable-next-line no-console
+      //     console.log('🔌 WS connected')
+      //   }
+      // },
       onError: async (_ctx, message, errors) => {
         console.error('ws onError', message, errors)
 

@@ -42,7 +42,7 @@ model User {
 
   ChatMessages       ChatMessage[] @relation(name: "ChatMessageCreatedBy")
   IncomeChatMessages ChatMessage[] @relation(name: "ChatMessageUserTo")
-  MindLogs           MindLog[]
+  MindLogs           MindLog[]     @relation(name: "MindLogCreatedBy")
 
   @@unique([email])
   @@unique([username])
@@ -141,5 +141,10 @@ model MindLog {
   quality   Float?
 
   createdById String @db.VarChar(36)
-  CreatedBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  CreatedBy   User   @relation(fields: [createdById], references: [id], onDelete: Cascade, name: "MindLogCreatedBy")
+
+  relatedToUserId String? @db.VarChar(36)
+
+  @@index([type])
+  @@index([relatedToUserId])
 }

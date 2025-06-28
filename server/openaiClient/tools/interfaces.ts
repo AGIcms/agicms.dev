@@ -16,6 +16,7 @@ export enum toolName {
   execGrahpqlQuery = 'execGrahpqlQuery',
   execCommand = 'execCommand',
   getSystemInfo = 'getSystemInfo',
+  createUserToken = 'createUserToken',
 }
 
 export type ToolHandler<T> = (

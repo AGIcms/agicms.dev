@@ -45,10 +45,10 @@ export async function sendOpenAiRequest({
     throw new Error('model is empty')
   }
 
-  if (process.env.NODE_ENV === 'development') {
-    // eslint-disable-next-line no-console
-    console.log('sendOpenAiRequest messages', JSON.stringify(messages, null, 2))
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   // eslint-disable-next-line no-console
+  //   console.log('sendOpenAiRequest messages', JSON.stringify(messages, null, 2))
+  // }
 
   try {
     // Отправляем запрос к OpenAI

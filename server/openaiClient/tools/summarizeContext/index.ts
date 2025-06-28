@@ -1,4 +1,5 @@
 import { BaseAiTool, toolName } from '../interfaces'
+import { cleanupMessagesHistory } from './helpers/cleanupMessagesHistory'
 
 export interface summarizeContextArgs {
   summary: string
@@ -33,21 +34,7 @@ export const summarizeContextTool: summarizeContextTool = {
   handler: async (args, _ctx, _user, messages) => {
     const { summary } = args
 
-    /**
-     * Важно! Не удаляем последнее сообщение, потому что в нем указано какая тулза
-     * выполняется и важно его оставлять, иначе все сломается.
-     */
-    for (let i = messages.length - 2; i >= 0; i--) {
-      const msg = messages[i]
-
-      if (
-        msg.role === 'tool' ||
-        msg.role === 'function' ||
-        (msg.role === 'assistant' && msg.tool_calls)
-      ) {
-        messages.splice(i, 1)
-      }
-    }
+    cleanupMessagesHistory(messages, false)
 
     return summary
   },

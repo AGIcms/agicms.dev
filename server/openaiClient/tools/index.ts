@@ -7,6 +7,7 @@ import { getGrahpQlSchemaTool } from './getGrahpqlSchema'
 import { execGrahpqlQueryTool } from './execGrahpqlQuery'
 import { execCommandTool } from './execCommand'
 import { getSystemInfo } from './getSystemInfo'
+import { createUserTokenTool } from './createUserToken'
 
 export const tools = {
   [createMindLogTool.name]: createMindLogTool,
@@ -18,4 +19,5 @@ export const tools = {
   [execGrahpqlQueryTool.name]: execGrahpqlQueryTool,
   [execCommandTool.name]: execCommandTool,
   [getSystemInfo.name]: getSystemInfo,
+  [createUserTokenTool.name]: createUserTokenTool,
 } as const

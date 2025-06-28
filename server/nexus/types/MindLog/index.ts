@@ -1,5 +1,7 @@
 import { extendType, objectType } from 'nexus'
 import { myMindLogsResolver } from './resolvers/myMindLogs'
+import { updateMyMindLogResolver } from './resolvers/updateMyMindLog'
+import { deleteMyMindLogResolver } from './resolvers/deleteMyMindLog'
 
 /**
  * Модель лога мышления агента
@@ -18,8 +20,14 @@ export const MindLog = objectType({
     t.nonNull.field('type', { type: 'MindLogType' })
     t.nonNull.string('data')
     t.float('quality')
-    t.nonNull.id('createdById')
+    t.nonNull.id('createdById', {
+      description: 'ID пользователя, от имени которого создай лог',
+    })
     t.field('CreatedBy', { type: 'User' })
+
+    t.id('relatedToUserId', {
+      description: 'ID пользователя, в отношении которого создай лог',
+    })
   },
 })
 
@@ -38,6 +46,20 @@ export const MindLogExtendsQuery = extendType({
       filtering: true,
       ordering: true,
       resolve: myMindLogsResolver,
+    })
+  },
+})
+
+export const MindLogExtendsMutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.crud.updateOneMindLog({
+      alias: 'updateMyMindLog',
+      resolve: updateMyMindLogResolver,
+    })
+    t.crud.deleteOneMindLog({
+      alias: 'deleteMyMindLog',
+      resolve: deleteMyMindLogResolver,
     })
   },
 })

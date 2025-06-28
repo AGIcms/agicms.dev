@@ -55,10 +55,10 @@ export async function getAiUser({ ctx }: getAiUserProps): Promise<User> {
       })
   }
 
-  if (process.env.NODE_ENV === 'development') {
-    // eslint-disable-next-line no-console
-    console.log('sendAiMessage user', aiUser)
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   // eslint-disable-next-line no-console
+  //   console.log('sendAiMessage user', aiUser)
+  // }
 
   if (!aiUser) {
     throw new Error('Can not get AI user')
