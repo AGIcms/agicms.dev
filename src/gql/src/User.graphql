@@ -41,4 +41,5 @@ fragment UserNoNesting on User {
   status
   intro
   content
+  type
 }

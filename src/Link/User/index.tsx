@@ -21,7 +21,7 @@ export const UserLink: React.FC<UserLinkProps> = ({
 }) => {
   const { id, username, fullname } = user
 
-  const name = fullname || username
+  const name = fullname || username || id
 
   const href = createUserLink(user)
 

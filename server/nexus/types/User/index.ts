@@ -35,6 +35,9 @@ export const User = objectType({
 
     t.nonNull.string('intro')
     t.nonNull.string('content')
+    t.field('type', {
+      type: 'userType',
+    })
   },
 })
 

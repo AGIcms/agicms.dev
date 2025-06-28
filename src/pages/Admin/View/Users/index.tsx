@@ -14,13 +14,6 @@ export const AsminUsersView: React.FC = () => {
 
   const response = useUsersConnectionQuery({
     variables: {
-      where: {
-        intro: {
-          not: {
-            equals: '',
-          },
-        },
-      },
       first: limit,
       orderBy: {
         createdAt: SortOrder.DESC,
@@ -46,6 +39,7 @@ export const AsminUsersView: React.FC = () => {
               <UserLink user={n} />
             </GridCell>
 
+            <GridCell>{n.type}</GridCell>
             <GridCell>{n.username}</GridCell>
 
             <GridCell>{n.fullname}</GridCell>
