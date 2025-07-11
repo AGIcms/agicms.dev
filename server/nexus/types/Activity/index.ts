@@ -20,7 +20,7 @@ export const Activity = interfaceType({
     switch (object.type) {
       case 'MindLog':
         return 'ActivityMindLog'
-      case 'SendMessaged':
+      case 'SendMessage':
         return 'ActivityMessage'
       case 'ToolCall':
         return 'ActivityToolCall'

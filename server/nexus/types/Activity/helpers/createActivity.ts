@@ -21,7 +21,7 @@ type createActivityProps = {
         user: User
       }
     | {
-        type: typeof ActivityType.SendMessaged
+        type: typeof ActivityType.SendMessage
         message: ChatMessage
       }
     | {
@@ -60,7 +60,7 @@ export function createActivity({
 
       break
 
-    case ActivityType.SendMessaged:
+    case ActivityType.SendMessage:
       activity = {
         ...commonFields,
         ChatMessage: payload.message,
