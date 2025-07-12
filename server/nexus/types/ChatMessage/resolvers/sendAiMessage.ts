@@ -1,15 +1,13 @@
 import { FieldResolver } from 'nexus'
-import { ChatCompletionMessageParam } from 'openai/resources/index'
 import { getAiUser } from '../../../../openaiClient/helpers/getAiUser'
-import { sendAiMessage } from '../../../../openaiClient/sendAiMessage'
-import { createMessage } from '../helpers/createMessage'
 import { createToken } from '../../User/resolvers/helpers/createToken'
+import { sendMessage } from '../helpers/sendMessage'
 
 export const sendAiMessageResolver: FieldResolver<
   'Mutation',
   'sendAiMessage'
 > = async (_, args, ctx) => {
-  const { id, text, withHistory } = args.data
+  const { id, text, withHistory, currentUrl } = args.data
 
   const { currentUser, prisma } = ctx
 
@@ -41,39 +39,14 @@ export const sendAiMessageResolver: FieldResolver<
 
   const toUser = await getAiUser({ ctx })
 
-  const message = await createMessage({
+  const chatMessage = await sendMessage({
+    id,
     ctx,
     fromUser,
-    toUser,
     text,
-    id: id ?? undefined,
-    usage: undefined,
-  })
-
-  const messages: ChatCompletionMessageParam[] = []
-
-  const aiMessage: ChatCompletionMessageParam = {
-    role: 'user',
-    content: message.text,
-  }
-
-  messages.push({
-    role: 'system',
-    content: `id сообщения пользователя (messageId): ${message.id}`,
-  })
-
-  messages.push(aiMessage)
-
-  /**
-   * Отправляем параллельно, чтобы не ждать ответа агента.
-   * То отправит параллельно через веб-сокет
-   */
-  const chatMessage = await sendAiMessage({
-    ctx,
-    fromUser,
+    toUserId: toUser.id,
     withHistory,
-    messages,
-    toUser,
+    currentUrl,
   })
 
   return {

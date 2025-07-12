@@ -30,6 +30,7 @@ export async function handleToolCall({
       type: ActivityType.ToolCall,
       name,
       args,
+      toUserId: ctx.currentUser?.id ?? null,
     },
   })
 

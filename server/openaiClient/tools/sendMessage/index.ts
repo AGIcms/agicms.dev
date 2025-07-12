@@ -43,6 +43,7 @@ export const sendMessageTool: SendMessageTool = {
       fromUser: user,
       toUserId: userId,
       ctx,
+      withHistory: false,
     }).then((r) => r?.text)
   },
 }

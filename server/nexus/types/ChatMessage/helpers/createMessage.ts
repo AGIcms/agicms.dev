@@ -40,6 +40,7 @@ export async function createMessage({
     payload: {
       type: ActivityType.SendMessage,
       message,
+      toUserId: ctx.currentUser?.id ?? null,
     },
   })
 

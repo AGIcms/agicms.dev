@@ -37,6 +37,7 @@ export async function createMindLog({
         payload: {
           type: ActivityType.MindLog,
           MindLog: mindLog,
+          toUserId: ctx.currentUser?.id ?? null,
         },
       })
 

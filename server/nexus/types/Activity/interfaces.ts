@@ -5,4 +5,7 @@ export enum ActivityType {
   MindLog = 'MindLog',
   ToolCall = 'ToolCall',
   StdOut = 'StdOut',
+
+  // Предложенный УРЛ для автоматического перехода
+  SuggestUrl = 'SuggestUrl',
 }

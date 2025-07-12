@@ -1,12 +1,17 @@
 import { User } from '@prisma/client'
 import { PrismaContext } from 'server/nexus/context'
 import { createMessage } from './createMessage'
+import { sendAiMessage } from '../../../../openaiClient/sendAiMessage'
+import { ChatCompletionMessageParam } from 'openai/resources'
 
 type sendMessageProps = {
   ctx: PrismaContext
   fromUser: User
   toUserId: string
   text: string
+  withHistory: boolean | undefined
+  id?: string | null
+  currentUrl?: string | null
 }
 
 export async function sendMessage({
@@ -14,6 +19,9 @@ export async function sendMessage({
   fromUser,
   toUserId,
   text,
+  withHistory,
+  id,
+  currentUrl,
 }: sendMessageProps) {
   const { prisma } = ctx
 
@@ -32,8 +40,40 @@ export async function sendMessage({
     fromUser,
     toUser,
     text,
+    id: id ?? undefined,
     usage: undefined,
   })
+
+  if (toUser.type === 'AI') {
+    const messages: ChatCompletionMessageParam[] = []
+
+    const aiMessage: ChatCompletionMessageParam = {
+      role: 'user',
+      content: message.text,
+    }
+
+    messages.push({
+      role: 'system',
+      content: `id сообщения пользователя (messageId): ${message.id}`,
+    })
+
+    if (currentUrl) {
+      messages.push({
+        role: 'system',
+        content: `Текущий УРЛ страницы пользователя: ${currentUrl}`,
+      })
+    }
+
+    messages.push(aiMessage)
+
+    return sendAiMessage({
+      ctx,
+      fromUser,
+      withHistory: withHistory ?? false,
+      messages,
+      toUser,
+    })
+  }
 
   return message
 }

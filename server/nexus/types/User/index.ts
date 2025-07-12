@@ -30,11 +30,11 @@ export const User = objectType({
     t.string('fullname')
     t.string('address')
     t.field('data', {
-      type: 'Json',
+      type: 'JSON',
     })
 
-    t.nonNull.string('intro')
-    t.nonNull.string('content')
+    t.string('intro')
+    t.string('content')
     t.field('type', {
       type: 'userType',
     })

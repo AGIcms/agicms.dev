@@ -7,11 +7,12 @@ export const Activity = interfaceType({
   name: 'Activity',
   definition(t) {
     t.nonNull.id('id')
-    t.nonNull.field('createdAt', {
-      type: 'DateTime',
-    })
+    t.nonNull.date('createdAt')
     t.nonNull.id('userId')
-    t.string('data')
+    t.id('toUserId')
+    t.field('data', {
+      type: 'JSON',
+    })
     t.nonNull.field('type', {
       type: 'ActivityType',
     })
@@ -26,6 +27,8 @@ export const Activity = interfaceType({
         return 'ActivityToolCall'
       case 'UrlChanged':
         return 'ActivityUrl'
+      case 'SuggestUrl':
+        return 'ActivitySuggestUrl'
       case 'UserCreated':
         return 'ActivityUser'
       case 'StdOut':
@@ -77,13 +80,21 @@ export const ActivityUrl = objectType({
   },
 })
 
+export const ActivitySuggestUrl = objectType({
+  name: 'ActivitySuggestUrl',
+  definition(t) {
+    t.implements('Activity')
+    t.nonNull.string('url')
+  },
+})
+
 export const ActivityToolCall = objectType({
   name: 'ActivityToolCall',
   definition(t) {
     t.implements('Activity')
     t.nonNull.string('name')
     t.field('args', {
-      type: 'Json',
+      type: 'JSON',
     })
   },
 })
@@ -123,14 +134,15 @@ export const ActivityExtendsSubscription = extendType({
             return true
           }
 
-          if ('ChatMessage' in payload) {
-            if (payload.ChatMessage.toUserId === userId) {
-              return true
-            }
-          }
-          // Обновление компаний рассылаем всем
-          else if ('Company' in payload) {
-            return true
+          switch (payload.type) {
+            case 'SuggestUrl':
+              if (payload.toUserId && payload.toUserId === userId) {
+                return true
+              }
+
+              break
+
+            default:
           }
 
           return false

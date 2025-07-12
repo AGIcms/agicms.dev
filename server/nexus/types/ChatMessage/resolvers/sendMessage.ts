@@ -18,5 +18,6 @@ export const sendMessageResolver: FieldResolver<
     fromUser: currentUser,
     text,
     toUserId,
+    withHistory: undefined,
   })
 }

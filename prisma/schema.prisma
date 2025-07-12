@@ -31,8 +31,8 @@ model User {
   active    Boolean?
   sudo      Boolean    @default(false)
   data      Json?
-  intro     String     @default("") @db.Text
-  content   String     @default("") @db.MediumText
+  intro     String?    @db.Text
+  content   String?    @db.MediumText
 
   Files File[]
 
@@ -115,6 +115,9 @@ enum MindLogType {
 
   // Выбранное действие или стратегия в ответ на реакцию (конкретный шаг, решение).
   Action
+
+  // Лог ошибки в случае выполнения запросов
+  Error
 
   // Объективная фиксация результата совершённых действий (что фактически получилось).
   Result

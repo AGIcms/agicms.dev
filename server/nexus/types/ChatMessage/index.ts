@@ -1,4 +1,3 @@
-// import { Prisma } from '@prisma/client'
 import { extendType, inputObjectType, nonNull, objectType } from 'nexus'
 import { sendAiMessageResolver } from './resolvers/sendAiMessage'
 
@@ -24,7 +23,7 @@ export const ChatMessage = objectType({
     t.string('socialGoal')
 
     t.field('usage', {
-      type: 'Json',
+      type: 'JSON',
     })
 
     t.field('CreatedBy', {
@@ -42,19 +41,18 @@ export const ChatMessageExtendsQuery = extendType({
   definition(t) {
     t.crud.chatMessage()
     t.crud.chatMessages({
-      filtering: true,
-      ordering: true,
-      // resolve(_, argsProps, ctx) {
-      //   const args = argsProps as Prisma.ChatMessageFindManyArgs
-
-      //   return ctx.prisma.chatMessage.findMany({
-      //     ...args,
-      //     include: {
-      //       CreatedBy: true,
-      //       ToUser: true,
-      //     },
-      //   })
-      // },
+      filtering: {
+        createdBy: true,
+        toUserId: true,
+        createdAt: true,
+      },
+      ordering: {
+        createdAt: true,
+      },
+      pagination: {
+        skip: true,
+        take: true,
+      },
     })
   },
 })
@@ -88,6 +86,9 @@ export const SendAiMessageInput = inputObjectType({
     t.id('id')
     t.nonNull.string('text')
     t.nonNull.boolean('withHistory')
+    t.string('currentUrl', {
+      description: 'Текущий УРЛ страницы, откуда отправляется запрос',
+    })
   },
 })
 

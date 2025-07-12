@@ -56,6 +56,7 @@ export const execCommandTool: execCommand = {
           payload: {
             type: ActivityType.StdOut,
             StdOut: result,
+            toUserId: null,
           },
         })
 
