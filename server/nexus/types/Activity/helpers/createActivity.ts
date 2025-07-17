@@ -38,6 +38,12 @@ type createActivityProps = {
         type: typeof ActivityType.StdOut
         StdOut: string
       }
+
+    // Custom
+    | {
+        type: typeof ActivityType.SuggestUrl
+        url: string
+      }
     | {
         type: typeof ActivityType.SuggestUrl
         url: string

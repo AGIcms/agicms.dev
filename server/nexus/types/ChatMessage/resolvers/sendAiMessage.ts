@@ -7,7 +7,7 @@ export const sendAiMessageResolver: FieldResolver<
   'Mutation',
   'sendAiMessage'
 > = async (_, args, ctx) => {
-  const { id, text, withHistory, currentUrl } = args.data
+  const { id, text, withHistory, currentUrl, filesIds } = args.data
 
   const { currentUser, prisma } = ctx
 
@@ -47,6 +47,7 @@ export const sendAiMessageResolver: FieldResolver<
     toUserId: toUser.id,
     withHistory,
     currentUrl,
+    filesIds,
   })
 
   return {

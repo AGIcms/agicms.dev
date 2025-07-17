@@ -12,6 +12,7 @@ type sendMessageProps = {
   withHistory: boolean | undefined
   id?: string | null
   currentUrl?: string | null
+  filesIds?: string[] | null
 }
 
 export async function sendMessage({
@@ -22,6 +23,7 @@ export async function sendMessage({
   withHistory,
   id,
   currentUrl,
+  filesIds,
 }: sendMessageProps) {
   const { prisma } = ctx
 
@@ -61,6 +63,15 @@ export async function sendMessage({
       messages.push({
         role: 'system',
         content: `Текущий УРЛ страницы пользователя: ${currentUrl}`,
+      })
+    }
+
+    if (filesIds?.length) {
+      messages.push({
+        role: 'system',
+        content: `Пользователем были загружены файлы с этими ID: ${filesIds.join(
+          ', ',
+        )}`,
       })
     }
 

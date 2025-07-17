@@ -44,6 +44,6 @@ export const sendMessageTool: SendMessageTool = {
       toUserId: userId,
       ctx,
       withHistory: false,
-    }).then((r) => r?.text)
+    }).then((r) => JSON.stringify(r, null, 2))
   },
 }

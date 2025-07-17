@@ -27,7 +27,7 @@ export async function createUser(
       payload: {
         type: ActivityType.UserCreated,
         user,
-        toUserId: null,
+        toUserId: ctx.currentUser?.id ?? null,
       },
     })
   }

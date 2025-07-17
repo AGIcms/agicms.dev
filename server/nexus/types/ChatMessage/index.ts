@@ -1,5 +1,6 @@
 import { extendType, inputObjectType, nonNull, objectType } from 'nexus'
 import { sendAiMessageResolver } from './resolvers/sendAiMessage'
+import { sendMessageResolver } from './resolvers/sendMessage'
 
 export const ChatMessage = objectType({
   name: 'ChatMessage',
@@ -67,6 +68,13 @@ export const ChatMessageExtendsMutation = extendType({
       },
       resolve: sendAiMessageResolver,
     })
+    t.nonNull.field('sendMessage', {
+      type: 'ChatMessageResponse',
+      args: {
+        data: nonNull('SendChatMessageInput'),
+      },
+      resolve: sendMessageResolver,
+    })
   },
 })
 
@@ -89,11 +97,14 @@ export const SendAiMessageInput = inputObjectType({
     t.string('currentUrl', {
       description: 'Текущий УРЛ страницы, откуда отправляется запрос',
     })
+    t.list.nonNull.id('filesIds', {
+      description: 'Массив айдишников загруженных файлов',
+    })
   },
 })
 
 export const SendChatMessageInput = inputObjectType({
-  name: 'ChatMessageCreateInput',
+  name: 'SendChatMessageInput',
   definition(t) {
     t.nonNull.string('text')
     t.nonNull.id('toUserId')
