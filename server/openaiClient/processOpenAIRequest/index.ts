@@ -3,10 +3,11 @@ import { PrismaContext } from '../../nexus/context'
 import { tools } from '../tools'
 import { processToolCalls } from '../tools/processToolCalls'
 
-import { User } from '../interfaces'
+import { AiAgentData, User } from '../interfaces'
 import { openaiClient } from '..'
 import { createMessage } from '../../nexus/types/ChatMessage/helpers/createMessage'
 import { ChatMessage } from '@prisma/client'
+import { ChatCompletionCreateParamsNonStreaming } from 'openai/resources/chat/completions'
 
 const openAiTools = Object.values(tools).map((n) => n.definition)
 
@@ -30,19 +31,32 @@ export async function sendOpenAiRequest({
   toUser,
   messages,
 }: sendOpenAiRequestProps): Promise<ChatMessage | undefined> {
-  let model: string | undefined = undefined
+  const aiUserData = toUser.data as Partial<AiAgentData> | undefined
 
-  if (
-    toUser.data &&
-    typeof toUser.data === 'object' &&
-    'model' in toUser.data &&
-    typeof toUser.data.model === 'string'
-  ) {
-    model = toUser.data.model
-  }
+  const { model, allowTools, maxTokens } = aiUserData || {}
 
   if (!model) {
     throw new Error('model is empty')
+  }
+
+  const complitionProps: ChatCompletionCreateParamsNonStreaming = {
+    model,
+    messages,
+  }
+
+  if (allowTools) {
+    Object.assign<
+      ChatCompletionCreateParamsNonStreaming,
+      Partial<ChatCompletionCreateParamsNonStreaming>
+    >(complitionProps, {
+      tools: openAiTools,
+      tool_choice: 'auto',
+      parallel_tool_calls: true,
+    })
+  }
+
+  if (maxTokens) {
+    complitionProps.max_completion_tokens = maxTokens
   }
 
   // if (process.env.NODE_ENV === 'development') {
@@ -51,14 +65,8 @@ export async function sendOpenAiRequest({
   // }
 
   try {
-    // Отправляем запрос к OpenAI
     const completion = await openaiClient.chat.completions.create({
-      model,
-      messages,
-      tools: openAiTools,
-      tool_choice: 'auto',
-      parallel_tool_calls: true,
-      max_completion_tokens: 20000,
+      ...complitionProps,
     })
 
     const responseMessage = completion.choices[0].message

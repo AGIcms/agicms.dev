@@ -17,6 +17,9 @@ export enum toolName {
   execCommand = 'execCommand',
   getSystemInfo = 'getSystemInfo',
   createUserToken = 'createUserToken',
+
+  // Custom
+  createAiAgentUser = 'createAiAgentUser',
 }
 
 export type ToolHandler<T> = (

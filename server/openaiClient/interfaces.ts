@@ -19,15 +19,18 @@ export interface ToolCall {
   function: ToolCallFunction
 }
 
-type AiAgentData = {
+export type AiAgentData = {
   username: string
   model: string
+  allowTools: boolean | null | undefined
+  maxTokens: number | null | undefined
 }
 
 export const AiAgents: AiAgentData[] = [
   {
     username: 'ai-main--gpt-4.1-2025-04-14',
-
     model: 'gpt-4.1-2025-04-14',
+    allowTools: true,
+    maxTokens: 20000,
   },
 ]

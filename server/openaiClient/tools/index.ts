@@ -8,6 +8,7 @@ import { execGrahpqlQueryTool } from './execGrahpqlQuery'
 import { execCommandTool } from './execCommand'
 import { getSystemInfo } from './getSystemInfo'
 import { createUserTokenTool } from './createUserToken'
+import { createAiAgentUserTool } from './createAiAgentUser'
 
 export const tools = {
   [createMindLogTool.name]: createMindLogTool,
@@ -20,4 +21,7 @@ export const tools = {
   [execCommandTool.name]: execCommandTool,
   [getSystemInfo.name]: getSystemInfo,
   [createUserTokenTool.name]: createUserTokenTool,
+
+  // Custom
+  [createAiAgentUserTool.name]: createAiAgentUserTool,
 } as const
