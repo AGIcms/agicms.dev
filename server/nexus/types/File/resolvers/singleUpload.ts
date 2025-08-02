@@ -4,9 +4,13 @@ import fs from 'fs'
 import mkdirp from 'mkdirp'
 import { PrismaContext } from 'server/nexus/context'
 import { NexusGenArgTypes, NexusGenObjects } from 'server/nexus/generated/nexus'
-import { Prisma } from '.prisma/client'
+import { Prisma } from '@prisma/client'
 
 const { createWriteStream, unlink } = fs
+
+/**
+ * Запись файла на диск
+ */
 
 const storeFS = async ({
   stream,
@@ -39,8 +43,6 @@ const storeFS = async ({
     throw new Error('Wrong directory')
   }
 
-  // return;
-
   return new Promise((resolve, reject) => {
     // const storedFileUrl = new URL(storedFileName, UPLOAD_DIRECTORY_URL);
     const storedFileUrl = normalized
@@ -55,21 +57,12 @@ const storeFS = async ({
         path: filePath,
       })
     })
-    // .on('close', () => {
-    //   console.log("writeStream close");
-    // })
-
-    // If there's an error writing the file, remove the partially written file
-    // and reject the promise.
     writeStream.on('error', (error) => {
       unlink(storedFileUrl, () => {
         reject(error)
       })
     })
 
-    // In Node.js <= v13, errors are not automatically propagated between piped
-    // streams. If there is an error receiving the upload, destroy the write
-    // stream with the corresponding error.
     stream
       .on('error', (error) => {
         writeStream.destroy(error)
@@ -105,9 +98,12 @@ export const processUpload = async (
   const writeResult = await storeFS({
     stream,
     filename,
-    directory,
+    directory: [`images/u/${currentUser.id}`, directory]
+      .filter((n) => !!n)
+      .join('/'),
   }).catch((error) => {
     console.error('writeResult error', error)
+    throw error
   })
 
   const { path } = writeResult || {}
@@ -124,20 +120,20 @@ export const processUpload = async (
       encoding,
       path: path.replace(/^\.\//, ''),
       size,
-      User: {
+      CreatedBy: {
         connect: {
           id: currentUser.id,
         },
       },
     }
 
-    const file = await ctx.prisma.file.create({
+    const createdFile = await ctx.prisma.file.create({
       data: uploaded,
     })
 
     return {
-      ...file,
-      size: file.size as number | null | undefined,
+      ...createdFile,
+      size: createdFile.size as number | null,
     }
   } else {
     throw new Error(`Can not upload file ${filename}`)

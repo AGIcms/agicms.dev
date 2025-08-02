@@ -1,9 +1,9 @@
-import { or, shield } from 'graphql-shield'
+import { shield } from 'graphql-shield'
 import { Rule, RuleOr } from 'graphql-shield/typings/rules'
 import { NexusGenFieldTypes } from '../../nexus/generated/nexus'
 // import { isAuthenticated } from './rules/isAuthenticated'
-import { isSudo } from './rules/isSudo'
-import { isAi } from './rules/isAi'
+// import { isSudo } from './rules/isSudo'
+// import { isAi } from './rules/isAi'
 
 type RuleTree<K extends NexusGenFieldTypes> = {
   // TODO Fix types
@@ -18,12 +18,15 @@ type RuleTreeRule<K extends Record<string, any>> = {
 }
 
 const ruleTree: RuleTree<NexusGenFieldTypes> = {
-  Query: {
-    chatMessage: or(isSudo, isAi),
-    chatMessages: or(isSudo, isAi),
-    mindLogs: or(isSudo, isAi),
-  },
-  MindLog: or(isSudo, isAi),
+  // Query: {
+  //   chatMessage: or(isAi, isSudo),
+  //   chatMessages: or(isAi, isSudo),
+  //   mindLogs: or(isAi, isSudo),
+  // },
+  // Mutation: {
+  //   createOneGeoObject: or(isAi, isSudo),
+  //   updateGeoObject: or(isAi, isSudo),
+  // },
 }
 
 export const permissions = shield(ruleTree, {

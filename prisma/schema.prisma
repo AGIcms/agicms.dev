@@ -2,6 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator nexusPrisma {
+  provider = "nexus-prisma"
+}
+
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
@@ -60,23 +64,24 @@ model Token {
 }
 
 model File {
-  id            String   @id @default(cuid()) @db.VarChar(32)
-  path          String   @db.MediumText
-  name          String?  @db.MediumText
-  filename      String?  @db.MediumText
-  mimetype      String   @db.MediumText
-  encoding      String   @db.MediumText
-  hash          String?  @db.MediumText
-  size          Decimal?
-  ImageResource String?  @db.VarChar(32)
-  CreatedBy     String?  @db.VarChar(32)
-  rank          Int?
-  createdAt     DateTime @default(now()) @db.DateTime(0)
-  updatedAt     DateTime @default(now()) @updatedAt @db.DateTime(0)
-  User          User?    @relation(fields: [CreatedBy], references: [id])
+  id          String   @id @default(cuid()) @db.VarChar(32)
+  path        String   @db.MediumText
+  name        String?  @db.MediumText
+  filename    String?  @db.MediumText
+  mimetype    String   @db.MediumText
+  encoding    String   @db.MediumText
+  hash        String?  @db.MediumText
+  size        Int?     @db.UnsignedInt
+  // Gallery               String?   @db.VarChar(32)
+  createdById String?  @db.VarChar(36)
+  CreatedBy   User?    @relation(fields: [createdById], references: [id])
+  // Gallery_FileToGallery Gallery?  @relation(fields: [Gallery], references: [id])
+  createdAt   DateTime @default(now()) @db.DateTime(0)
+  updatedAt   DateTime @default(now()) @updatedAt @db.DateTime(0)
 
-  @@index([CreatedBy], name: "CreatedBy")
-  @@index([ImageResource], name: "ImageResource")
+  // @@index([CreatedBy], name: "CreatedBy")
+  // @@index([Gallery], name: "Gallery")
+  // @@index([ImageResource], name: "ImageResource")
 }
 
 model ChatMessage {

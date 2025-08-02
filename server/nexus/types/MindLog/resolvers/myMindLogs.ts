@@ -12,7 +12,7 @@ export const myMindLogsResolver: FieldResolver<'Query', 'myMindLogs'> = async (
     throw new Error('Now authorized')
   }
 
-  const whereProps = args.where as Prisma.MindLogWhereInput | null | undefined
+  // const whereProps = args.where as Prisma.MindLogWhereInput | null | undefined
 
   const AND: Prisma.MindLogWhereInput['AND'] = [
     {
@@ -20,9 +20,9 @@ export const myMindLogsResolver: FieldResolver<'Query', 'myMindLogs'> = async (
     },
   ]
 
-  if (whereProps) {
-    AND.push(whereProps)
-  }
+  // if (whereProps) {
+  //   AND.push(whereProps)
+  // }
 
   return prisma.mindLog.findMany({
     ...(args as Prisma.MindLogFindManyArgs),

@@ -1,23 +1,11 @@
 import { makeSchema } from 'nexus'
-
-import { nexusPrisma } from 'nexus-plugin-prisma'
+import { applyMiddleware } from 'graphql-middleware'
 
 import * as types from './types'
-import { applyMiddleware } from 'graphql-middleware'
 import { permissions } from '../graphqlServer/permissions'
 
 const schemaBase = makeSchema({
-  plugins: [
-    nexusPrisma({
-      experimentalCRUD: true,
-
-      paginationStrategy: 'prisma',
-
-      outputs: {
-        typegen: __dirname + '/generated/nexusPrisma.ts',
-      },
-    }),
-  ],
+  plugins: [],
   types: {
     ...types,
   },

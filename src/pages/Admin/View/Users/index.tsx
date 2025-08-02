@@ -1,6 +1,6 @@
 import { NextSeo } from 'next-seo'
 import React from 'react'
-import { SortOrder, useUsersConnectionQuery } from 'src/gql/generated'
+import { useUsersConnectionQuery } from 'src/gql/generated'
 import { usePage, usePagination } from 'src/hooks/usePagination'
 import { AsminUsersViewTable } from './styles'
 import { GridCell, GridRow } from 'src/Grid/styles'
@@ -15,9 +15,9 @@ export const AsminUsersView: React.FC = () => {
   const response = useUsersConnectionQuery({
     variables: {
       first: limit,
-      orderBy: {
-        createdAt: SortOrder.DESC,
-      },
+      // orderBy: {
+      //   createdAt: SortOrder.DESC,
+      // },
       skip,
     },
   })

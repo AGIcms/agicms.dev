@@ -40,21 +40,19 @@ export const ChatMessage = objectType({
 export const ChatMessageExtendsQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.crud.chatMessage()
-    t.crud.chatMessages({
-      filtering: {
-        createdBy: true,
-        toUserId: true,
-        createdAt: true,
-      },
-      ordering: {
-        createdAt: true,
-      },
-      pagination: {
-        skip: true,
-        take: true,
+    t.field('chatMessage', {
+      type: 'ChatMessage',
+      args: {
+        where: nonNull('ChatMessageWhereUniqueInput'),
       },
     })
+  },
+})
+
+export const ChatMessageWhereUniqueInput = inputObjectType({
+  name: 'ChatMessageWhereUniqueInput',
+  definition(t) {
+    t.nonNull.id('id')
   },
 })
 

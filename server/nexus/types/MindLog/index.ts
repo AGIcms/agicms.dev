@@ -1,12 +1,23 @@
-import { extendType, objectType } from 'nexus'
+import { Prisma } from '@prisma/client'
+import {
+  extendType,
+  objectType,
+  // arg,
+  // list,
+  // nonNull,
+  enumType,
+  // inputObjectType,
+  // queryType,
+} from 'nexus'
+import { MindLogType } from 'nexus-prisma'
 import { myMindLogsResolver } from './resolvers/myMindLogs'
-import { updateMyMindLogResolver } from './resolvers/updateMyMindLog'
-import { deleteMyMindLogResolver } from './resolvers/deleteMyMindLog'
+// import { updateMyMindLogResolver } from './resolvers/updateMyMindLog'
+// import { deleteMyMindLogResolver } from './resolvers/deleteMyMindLog'
 
 /**
  * Модель лога мышления агента
  */
-export const MindLog = objectType({
+export const MindLogModel = objectType({
   name: 'MindLog',
   description: 'Запись в логе мышления агента',
   definition(t) {
@@ -23,7 +34,7 @@ export const MindLog = objectType({
     t.nonNull.id('createdById', {
       description: 'ID пользователя, от имени которого создай лог',
     })
-    t.field('CreatedBy', { type: 'User' })
+    // t.field('CreatedBy', { type: 'User' })
 
     t.id('relatedToUserId', {
       description: 'ID пользователя, в отношении которого создай лог',
@@ -31,35 +42,67 @@ export const MindLog = objectType({
   },
 })
 
+export const MindLogTypeModel = enumType(MindLogType)
+
 export const MindLogExtendsQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.crud.mindLogs({
+    t.nonNull.list.nonNull.field('mindLogs', {
+      type: 'MindLog',
       description: 'Доступно только админу',
-      filtering: true,
-      ordering: true,
+      args: {
+        // where: arg({ type: 'MindLogWhereInput' }),
+        // orderBy: arg({ type: list('MindLogOrderByWithRelationInput') }),
+        // cursor: arg({ type: 'MindLogWhereUniqueInput' }),
+        // take: arg({ type: 'Int' }),
+        // skip: arg({ type: 'Int' }),
+      },
+      resolve(_, args, ctx) {
+        return ctx.prisma.mindLog.findMany({
+          ...(args as Prisma.MindLogFindManyArgs),
+        })
+      },
     })
 
-    t.crud.mindLogs({
-      alias: 'myMindLogs',
+    t.nonNull.list.nonNull.field('myMindLogs', {
+      type: 'MindLog',
       description: 'Возвращает свои данные',
-      filtering: true,
-      ordering: true,
+      args: {
+        // where: arg({ type: 'MindLogWhereInput' }),
+        // orderBy: arg({ type: list('MindLogOrderByWithRelationInput') }),
+        // cursor: arg({ type: 'MindLogWhereUniqueInput' }),
+        // take: arg({ type: 'Int' }),
+        // skip: arg({ type: 'Int' }),
+      },
       resolve: myMindLogsResolver,
     })
   },
 })
 
-export const MindLogExtendsMutation = extendType({
-  type: 'Mutation',
-  definition(t) {
-    t.crud.updateOneMindLog({
-      alias: 'updateMyMindLog',
-      resolve: updateMyMindLogResolver,
-    })
-    t.crud.deleteOneMindLog({
-      alias: 'deleteMyMindLog',
-      resolve: deleteMyMindLogResolver,
-    })
-  },
-})
+// export const MindLogWhereInput = inputObjectType({
+//   name: "MindLogWhereInput",
+
+// })
+
+// export const MindLogExtendsMutation = extendType({
+//   type: 'Mutation',
+//   definition(t) {
+//     // Заменяем t.crud на обычные мутации
+//     t.field('updateMyMindLog', {
+//       type: 'MindLog',
+//       args: {
+//         where: arg({ type: nonNull('MindLogWhereUniqueInput') }),
+//         data: arg({ type: nonNull('MindLogUpdateInput') }),
+//       },
+//       resolve: updateMyMindLogResolver,
+//     })
+
+//     t.field('deleteMyMindLog', {
+//       type: 'MindLog',
+//       args: {
+//         where: arg({ type: nonNull('MindLogWhereUniqueInput') }),
+//       },
+//       resolve: deleteMyMindLogResolver,
+//     })
+//   },
+// })

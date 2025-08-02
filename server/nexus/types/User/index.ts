@@ -1,5 +1,7 @@
+// import { Prisma } from '@prisma/client'
 import { Prisma } from '@prisma/client'
-import { objectType, extendType } from 'nexus'
+import { objectType, extendType, enumType, arg, inputObjectType } from 'nexus'
+import { UserStatus, userType } from 'nexus-prisma'
 
 export const User = objectType({
   name: 'User',
@@ -41,23 +43,52 @@ export const User = objectType({
   },
 })
 
+export const UserStatusEnum = enumType(UserStatus)
+export const userTypeEnum = enumType(userType)
+
 export const UserQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.crud.user({
+    t.field('user', {
+      type: User,
       description: 'Пользователь',
+      args: {
+        where: arg({ type: 'UserWhereUniqueInput' }),
+      },
+      resolve(_, args, ctx) {
+        return ctx.prisma.user.findUnique({
+          where: {
+            id: args.where?.id ?? undefined,
+          },
+        })
+      },
     })
 
-    t.crud.users({
+    t.nonNull.list.nonNull.field('users', {
+      type: User,
       description: 'Список пользователей',
-      filtering: true,
-      ordering: true,
+      args: {
+        where: arg({ type: 'UserWhereInput' }),
+        // orderBy: arg({ type: 'UserOrderByWithRelationInput' }),
+        // cursor: arg({ type: 'UserWhereUniqueInput' }),
+        take: arg({ type: 'Int' }),
+        skip: arg({ type: 'Int' }),
+      },
+      resolve(_, args, ctx) {
+        return ctx.prisma.user.findMany({
+          where: args.where as Prisma.UserWhereUniqueInput,
+          // orderBy: args.orderBy || undefined,
+          // cursor: args.cursor ? { id: args.cursor.id } : undefined,
+          take: args.take || undefined,
+          skip: args.skip || undefined,
+        })
+      },
     })
 
     t.nonNull.int('usersCount', {
       description: 'Количество пользователей',
       args: {
-        where: 'UserWhereInput',
+        where: arg({ type: 'UserWhereInput' }),
       },
       resolve(_, args, ctx) {
         return ctx.prisma.user.count({
@@ -72,5 +103,19 @@ export const UserQuery = extendType({
         return ctx.currentUser
       },
     })
+  },
+})
+
+export const UserWhereUniqueInput = inputObjectType({
+  name: 'UserWhereUniqueInput',
+  definition(t) {
+    t.id('id')
+  },
+})
+
+export const UserWhereInput = inputObjectType({
+  name: 'UserWhereInput',
+  definition(t) {
+    t.id('id')
   },
 })

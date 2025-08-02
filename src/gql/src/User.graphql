@@ -10,14 +10,9 @@ query user($where: UserWhereUniqueInput!) {
   }
 }
 
-query usersConnection(
-  $where: UserWhereInput
-  $orderBy: [UserOrderByWithRelationInput!] = { createdAt: asc }
-  $skip: Int
-  $first: Int = 10
-) {
+query usersConnection($where: UserWhereInput, $skip: Int, $first: Int = 10) {
   usersCount(where: $where)
-  users(where: $where, orderBy: $orderBy, skip: $skip, take: $first) {
+  users(where: $where, skip: $skip, take: $first) {
     ...User_
   }
 }
